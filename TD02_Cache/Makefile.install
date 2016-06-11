@@ -1,0 +1,74 @@
+#------------------------------------------------------------------
+# Un exemple d'implémentation du cache d'un fichier afin d'explorer
+# l'effet des algortihmes de gestion et de remplacement
+#------------------------------------------------------------------
+# Jean-Paul Rigault --- ESSI --- Janvier 2005
+# $Id: Makefile.install,v 1.2 2008/02/29 16:21:12 jpr Exp $
+#------------------------------------------------------------------
+# Makefile
+#------------------------------------------------------------------
+
+# Compilateur et options
+
+CC = gcc
+CFLAGS = -std=c99 -Wall -g 
+
+# Exécutables à construire
+
+PROGS = tst_Cache_RAND.exe # tst_Cache_FIFO.exe tst_Cache_LRU.exe tst_Cache_NUR.exe 
+
+# Au fur et à mesure, introduisez les programmes de tests des différentes stratégies 
+# dans la variable PROGS ci-dessus. Au final, vous devez avoir
+#
+# PROGS = tst_Cache_RAND.exe tst_Cache_FIFO.exe tst_Cache_LRU.exe tst_Cache_NUR.exe
+
+#------------------------------------------------------------------
+# Cibles principales
+#------------------------------------------------------------------
+
+COMMON_OBJS = main_Cache.o cache.o cache_list.o low_cache.o
+
+tst_Cache_%.exe : $(COMMON_OBJS) %_strategy.o
+	$(CC) -o $@ $^
+
+# Exécutables
+
+all : $(PROGS)
+
+# Nettoyage
+
+clean : 
+	-rm $(PROGS)
+
+#------------------------------------------------------------------
+# Dependances individuelles
+#------------------------------------------------------------------
+
+FIFO_strategy.o: strategy.h low_cache.h cache.h cache_list.h 
+LRU_strategy.o: strategy.h low_cache.h cache.h cache_list.h 
+NUR_strategy.o: low_cache.h cache.h 
+RAND_strategy.o: strategy.h low_cache.h cache.h random.h
+
+#------------------------------------------------------------------
+# Simulation du cache et tracé des courbes
+#------------------------------------------------------------------
+
+plots : all cache_size locality read_write_ratio
+
+cache_size :
+	plot.sh -T "Effet de la taille du cache" \
+		-o Plots/t5-cache_size -x "taille fichier / taille cache" \
+		-t 5 -l "400,70" \
+		-- -r 1000 500 200 100 50 10 5 1
+
+locality : 
+	plot.sh -T "Effet de la localité" \
+		-o Plots/t5-locality -x "Largeur de la fenêtre de localité" \
+		-t 5 -l "100,70" \
+		-- -L 5 10 20 50 100 150 200 250 300 350 400 500 600 
+
+read_write_ratio :
+	plot.sh -T "Effet du ratio lectures / écritures" \
+		-o Plots/t5-rw_ratio -x "Ratio lectures / écritures" \
+		-t 5 -l "200,70" \
+		-- -w 1 2 5 10 30 50 80 100 150 200 300 400 500     

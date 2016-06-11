@@ -1,0 +1,125 @@
+/*!
+\mainpage Remarques sur la solution proposée pour mymalloc()/myfree()
+
+\section tests Tests
+
+\subsection gen Génération
+
+La commande \c make produit les deux exécutables de test.
+
+Le premier test, \c tst_mymalloc1.exe, effectue un nombre \a n d'allocations dont la
+taille est tirée au sort entre 0 et \a szmax, puis désalloue ce qui a été alloué
+dans l'ordre inverse. Les valeurs de \a n et \a szmax sont passées en paramètres de
+la lignes de commande (et si elles ne sont pas fournies, des valeurs par défaut
+internes sont utilisées).
+
+Le second test, \c tst_mymalloc2.exe, vise à être un peu plus aléatoire. Il
+effectue \a n itérations, chaque itération effectuant les actions suivante
+
+- on tire au sort pour savoir si l'on fait une allocation ou une
+	désallocation ; si la désallocation a été tirée, mais qu'elle est
+	impossible (tout a été libéré) on fait une allocation.
+
+- dans le cas d'une allocation, on tire au sort la taille entre 0 et
+        \a szmax ;
+
+- dans le cas d'une désallocation, on désalloue le dernier alloué.
+
+- à la fin des \a n itérations, on désalloue tout ce qui reste.
+
+\subsection instrum Instrumentation
+
+Les programmes de test invoquent la fonction d'instrumentation après chaque
+allocation ou désallocation. Cette fonctions imprime :
+
+<dl>
+<dt>\a nsysblk</dt> 
+        <dd>le nombre d'appels à \c sbrk() cad le nombre de blocs système ; 
+        ce nombre ne décroit pas car on ne peut pas rendre facilement 
+        ce qu'on a ainsi obtenu !</dd>
+
+<dt>\a syssz</dt>   
+        <dd>la somme des tailles de tous les blocs système (même remarque 
+        que précédemment)</dd>
+
+<dt>\a usersz</dt> 
+        <dd>la taille totale allouée par l'utilisateur (même
+        remarque que précédemment) ; de plus cette taille est inférieure à \a
+        syssz, la différence étant le surcoût nécessaire à la gestion</dd>
+
+<dt>\a nuserblk</dt> <dd>le nombre de blocs alloués à l'utilisateur et non
+         libérés ; si on désalloue tout ce qu'on a alloué, ce qui est le cas
+         des deux programmes de tests, ce nombre doit revenir à 0</dd>
+
+<dt>\a totalsz</dt> 
+        <dd>la taille totale des blocs précédents (même remarque, elle 
+        revient aussi à 0)</dd>
+
+<dt>\a nfree</dt> 
+        <dd>le nombre de blocs libres ; à la fin des programmes de
+        tests, ce nombre est au minimum 1, au maximum le nombre de blocs
+        alloués par \c sbrk() (\a nsysblk) ; en effet si tous les blocs
+        retournés par \c sbrk() sont consécutifs en mémoire, ils seront tous
+        fusionnés en un seul par myfree() lorsque tous les blocs utilisateurs
+        seront rendus ; cependant, cette consécutivité n'est absolument pas
+        garantie et à la fin, il peut donc y avoir au maximum \a nsysblk blocs
+        libres non consécutifs.</dd> </dl>
+
+\subsection res Résultats
+
+Comme indiqué ci-dessus, les deux tests faisant autant de désallocations que
+d'allocations, \a nuserblk et \a totalsz reviennent bien à 0 à la fin des
+tests. En outre \a nfree est inférieur ou égal à \a nsysblk.
+
+\section algo Analyse des algorithmes utilisés
+
+\subsection robust Robustesse
+
+Le programme n'est pas bien robuste. En particulier \c myfree(NULL) est assez
+délétère. (Notez que \c free(NULL) l'est aussi !). De même, \c myfree(p) où \a p n'est
+pas le résultat d'un \c mymalloc() précédent va surement faire des choses peu
+correctes... (c'est aussi le cas du \c free() standard !). 
+
+\subsection mem Occupation mémoire
+
+En terme de performance d'occupation mémoire, notre schéma est un peu cher :
+
+   - pour chaque bloc alloué, nous devons lui donner un en-tête de gestion ;
+
+   - nous n'allouons que des blocs de taille multiple de la taille d'en-tête.
+
+Sur des machines 32 bits, la taille d'un en-tête (\c HEADER_SZ) est de 8. Donc,
+par exemple, pour 1 octet utile alloue par l'utilisateur nous en allouons 16,
+soit un surcout de 1500 % ! La situation est évidemment pire sur des machines
+64 bits. Envidemment ce surcout se réduit pour l'allocation d'un entier (\c
+int) où il n'est plus que de 300 % (toujoours en 32 bits) et il devient presque
+négligeable pour un bloc de 1024 octets (de l'ordre de 1,5 %). Mais pour les
+petites allocations, notre méthode n'est pas trop brillante.
+
+De plus, comme nous l'avons déjà remarqué, nous ne savons pas rendre facilement
+ce que \c sbrk() nous a donné. 
+
+Du côté positif, la fusion des blocs dans \c myfree() minimise la fragmentation.
+
+\subsection time Temps d'exécution
+
+Toute allocation ou déallocation implique un parcours de la liste libre (temps
+linéaire). Cette liste peut contenir un très grand nombre d'élements même si la
+fusion dans \c myfree() tend à le diminuer.
+
+Pire, lors d'une allocation, lorsque nous ne trouvons aucun bloc libre de
+taille convenable et que nous appelons \c sbrk() nous effectuons un second
+parcours de la liste libre pour y mettre ce nouveau bloc, puis un troisième
+pour le retrouver dans cette liste ! En fait, ceci est un peu adouci par le
+fait que la liste libre a peu d'eléments en géneéral, à cause de la fusion.
+
+Mais, quoi qu'il en soit, \c myfree() risque de nous couter cher. Ceci est
+inévitable si nous n'avons pas de garantie sur l'ordre de adresses des blocs
+retournés par \c sbrk(). En revanche, si nous sommes sûrs que, par exemple, les
+appels successifs à \c sbrk() retournent des blocs avec des adresses croissantes
+(c'est le cas sur nos machines), nous devons pouvoir faire mieux...
+
+Jean-Paul Rigault<br>
+Janvier 2005-Avril 2012
+
+*/

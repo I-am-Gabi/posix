@@ -1,0 +1,52 @@
+#---------------------------------------------------------------------------------
+# Primitives de POSIX.1 : Manipulations de fichiers et répertoires
+#---------------------------------------------------------------------------------
+# Jean-Paul Rigault --- ESSI --- Mars 2005
+# $Id: Makefile.install,v 1.3 2008/04/21 18:08:09 jpr Exp $
+# --------------------------------------------------------------------------------
+# Makefile pour les étudiants
+#---------------------------------------------------------------------------------
+
+# Compilateur et options
+# ----------------------
+
+CC = gcc
+CFLAGS = -ansi -pedantic -Wall -g 
+
+# Règle par défaut pour construire foo.exe à partir d'un seul fichier foo.c
+# -------------------------------------------------------------------------
+
+%.exe : %.c
+	$(CC) $(CFLAGS) -o $@ $<
+
+# Exécutables à construire
+# ------------------------
+# Mettez les au fur et à mesure de l'avancement de votre travail. Au bout du compte
+# vous devez avoir
+#
+# PROGS = printenv.exe lsrec.exe mycp1.exe mycp2.exe 
+PROGS =
+
+#---------------------------------------------------------------------------------
+# Cibles principales
+#---------------------------------------------------------------------------------
+
+# Exécutables et bibliothèques
+# ----------------------------
+
+all : $(PROGS)
+
+# Nettoyages
+# ----------
+
+# Nettoyage léger : 
+# conserve les bibliothèques et les exécutables
+clean : all
+	-rm -f \#* *.o 
+
+# Nettoyage en profondeur : 
+# détruit tous les fichiers générés, y compris les liens avec Cache
+clobber full_clean :
+	-rm -f \#* *.o $(PROGS) 
+	-rm -rf Tests
+

@@ -1,0 +1,30 @@
+
+#include <assert.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "mymalloc.h"
+#include "mymalloc_impl.h"
+
+
+/*
+    Fichier à compléter avec votre implémentation de mymalloc() et myfree().
+*/
+
+void *mymalloc(size_t sz)
+{
+    // Remplacer la ligne suivante par votre propre code
+    return malloc(sz);
+}
+
+void myfree(void *ptr)
+{
+    // Remplacer la ligne suivante par votre propre code
+    return free(ptr);
+}
+
+void mymalloc_instrum()
+{
+    // Mettre ici votre propre code
+}

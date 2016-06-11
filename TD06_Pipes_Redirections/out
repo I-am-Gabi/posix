@@ -1,0 +1,4 @@
+ls: bar: No such file or directory
+ls: foo: No such file or directory
+ring.c
+station.c

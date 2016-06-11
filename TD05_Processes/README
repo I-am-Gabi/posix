@@ -1,0 +1,44 @@
+POSIX.1 : Manipulations de processus
+====================================
+
+La Makefile permet de construire les produits suivants :
+
+make (ou make all)
+	Construit les exécutables demandés, à savoir
+
+        process.exe   
+		propriétés des processus fils (§5.2)
+
+        multiple_fork.exe 
+		création multiple de processus (§5.3)
+
+        exec_prop.exe (et exec_prop-aux.exe)
+        	propriétés du recouvrement par exec() (exec_prop-aux.exe est 
+                précisément la cible de l'exec()) (§5.4)
+
+        shell-exec.exe
+		simulation de l'exécution d'une commande shell, directement par
+                execXX() (§5.5) 
+
+        shell-system.exe
+                Simulation de la boucle du shellavec une version naïve de la 
+                fonction system() (§5.5) 
+
+        fcat.exe
+                utilisation du "set user's bit" pour laisser l'autorisation
+                d'accès à ses propres fichiers par des utilisateurs choisis
+                (le fichier secret est secret_file.txt, et la Makefile lui
+                attribue des droits restreints)        
+
+make clean
+	Détruit tous les fichiers intermédiaires mais garde les exécutables et
+        les tests.
+
+make clobber
+     	Nettoyage total : permet de repartir à zéro.
+
+
+Jean-Paul Rigault
+Mars 2005
+$Id: README,v 1.3 2005/04/09 18:47:50 jpr Exp $
+

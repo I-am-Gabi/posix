@@ -1,0 +1,10 @@
+#ifndef _MYMALLOC_IMPL_H_
+#define _MYMALLOC_IMPL_H_
+
+/*
+Mettez ici toutes les information dont mymalloc.c a besoin mais qui n'ont pas à
+être visible du code "client (main_mymalloc*.c).
+*/
+
+#endif
+

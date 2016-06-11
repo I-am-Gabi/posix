@@ -1,0 +1,198 @@
+#---------------------------------------------------------------------------------
+# Un exemple d'implémentation du cache d'un fichier afin d'explorer
+# l'effet des algortihmes de gestion et de remplacement
+#---------------------------------------------------------------------------------
+# Jean-Paul Rigault --- ESSI --- Janvier 2005
+# $Id: Makefile.install,v 1.4 2008/11/21 07:44:50 jpr Exp $
+#---------------------------------------------------------------------------------
+# Makefile pour sujet
+#---------------------------------------------------------------------------------
+
+# Compilateur et options
+# ----------------------
+
+# On supprime l'option -pedantic qui provoque des warnings de conversion 
+# interdite entre void * et pointeurs sur fonctions en ISO C lors de 
+# l'utilisation de dlsym().
+#
+# En revanche, on ajoute l'option -fpic (ou -fPIC) pour créer les .o des
+# bibliothèques partagées. Cette option n'est pas utile pour les bibliothèques
+# statiques, mais elle n'est pas nuisible non plus.
+
+CC = gcc
+CFLAGS = -std=c99 -g -fpic 
+
+# Exécutables à construire
+# ------------------------
+
+NONLIB_PROGS =	 tst_Cache_RAND.exe tst_Cache_FIFO.exe \
+	         tst_Cache_LRU.exe tst_Cache_NUR.exe
+
+STATIC_PROGS = 	 tst_Cache_RAND-static.exe tst_Cache_FIFO-static.exe \
+	         tst_Cache_LRU-static.exe tst_Cache_NUR-static.exe
+
+DYNAMIC_PROGS =	 tst_Cache_RAND-dynamic.exe tst_Cache_FIFO-dynamic.exe \
+	         tst_Cache_LRU-dynamic.exe tst_Cache_NUR-dynamic.exe
+
+LOADABLE_PROGS = tst_Cache-loadable.exe 
+
+## A FAIRE : Dans un premier temps, on ne construit que les programmes sans bibliothèques
+## Ensuite, complétez cette variable, au fur et à mesure de votre travail
+## jusqu'à aboutir à
+##
+# #PROGS = 	 $(NONLIB_PROGS) $(STATIC_PROGS) $(DYNAMIC_PROGS) $(LOADABLE_PROGS)
+PROGS =		 $(NONLIB_PROGS)
+
+
+# Bibliothèques à construire
+# --------------------------
+
+STATIC_LIBS =    libCache_RAND-static.a libCache_FIFO-static.a \
+		 libCache_LRU-static.a libCache_NUR-static.a
+
+DYNAMIC_LIBS =   libCache_RAND-dynamic.so libCache_FIFO-dynamic.so \
+		 libCache_LRU-dynamic.so libCache_NUR-dynamic.so
+
+LOADABLE_LIBS =  libStrategy-RAND.so  libStrategy-FIFO.so  \
+		 libStrategy-LRU.so  libStrategy-NUR.so 
+
+## A FAIRE : Dans un premier temps, on ne construit aucune bibliothèque.
+## Ensuite, complétez cette variable, au fur et à mesure de votre travail
+## jusqu'à aboutir à
+##
+## LIBS =	 $(STATIC_LIBS) $(DYNAMIC_LIBS) $(LOADABLE_LIBS)
+LIBS =
+
+# Répertoire du projet Cache dont celui-ci dépend
+# -----------------------------------------------
+
+CACHE_DIR=../Cache
+
+# Fichiers-objets non fournis
+# ---------------------------
+
+# Pour ceux-ci les sources (.c) sont fournis
+LOCAL_OBJ =	main_Cache-loadable.o load_strategy.o
+
+## A FAIRE : Mais vous devez fournir (ou l'on vous fournira) les sources de ce qui suit.
+STRATEGY_OBJ =  RAND_strategy.o FIFO_strategy.o LRU_strategy.o NUR_strategy.o
+
+#---------------------------------------------------------------------------------
+# Cibles principales
+#---------------------------------------------------------------------------------
+
+# Exécutables et bibliothèques
+# ----------------------------
+
+all : $(LIBS) $(PROGS)
+
+# Nettoyages
+# ----------
+
+# Nettoyage léger : 
+# conserve les bibliothèques et les exécutables
+clean : all
+	-rm $(LOCAL_OBJ)
+	-rm -f \#*  foo
+
+# Nettoyage en profondeur : 
+# détruit tous les fichiers générés, y compris les liens avec Cache
+clobber full_clean :
+	-rm $(LOCAL_OBJ)
+	-rm -f \#* foo
+	-rm -f $(PROGS) $(LIBS)
+
+#---------------------------------------------------------------------------------
+# Exécutables construits sans bibliothèques 
+#---------------------------------------------------------------------------------
+
+# Règle par défaut pour les exécutables
+# 	%' sert de "joker" dans la règle
+#	$@ est le nom de la cible (partie gauche de la règle)
+#	$^ est la liste des dépendances (partie droite de la règle)
+# Noter que cache_list.o n'est pas utile pour toutes les stratégies, 
+# mais si on veut une règle unique...
+
+tst_Cache_%.exe : main_Cache.o cache.o low_cache.o %_strategy.o cache_list.o
+	$(CC) -o $@ $^
+
+#---------------------------------------------------------------------------------
+# Exécutables construits avec bibliothèques statiques
+#---------------------------------------------------------------------------------
+
+## A FAIRE : Mettez ici les règles qui permettent de construire les
+## bibliothèques statiques ($(STATIC_LIBS)) et les exécutables correspondants
+## ($(STATIC_PROGS)). Ajoutez alors ces deux variables dans la définition de
+## PROGS et LIBS en tête de ce fichier.
+##
+## Des règles par défaut semblables à la précédente peuvent s'avérer utiles (et
+## suffisantes).
+
+#---------------------------------------------------------------------------------
+# Exécutables construits avec bibliothèques dynamiques chargeables automatiquement
+#---------------------------------------------------------------------------------
+
+## A FAIRE : Mettez ici les règles qui permettent de construire les
+## bibliothèques dynamiques ($(DYNAMIC_LIBS)) et les exécutables correspondants
+## ($(DYNAMIC_PROGS)) en édition de liens statique. Ajoutez alors ces deux
+## variables dans la définition de PROGS et LIBS en tête de ce fichier.
+##
+## Là encore, des règles par défaut semblables à la précédente peuvent s'avérer
+## utiles (et suffisantes).
+##
+## N'oubliez pas les options de l'éditeur de liens pour construire les fichiers .so
+
+#---------------------------------------------------------------------------------
+# Exécutables construits avec bibliothèques chargeables dynamiquement
+#---------------------------------------------------------------------------------
+
+## A FAIRE : Mettez ici les règles qui permettent de construire les
+## bibliothèques dynamiques ($(LOADABLE_LIBS)) et l'*unique* exécutable
+## correspondant ($(LOADABLE_PROGS)). Ajoutez alors ces deux variables dans la
+## définition de PROGS et LIBS en tête de ce fichier.
+##
+## Là encore, essayez d'utiliser des règles par défaut, au moins pour les
+## bibliothèques.
+##
+## N'oubliez pas les options de l'éditeur de liens pour construire les fichiers
+## .so, ni l'option -rdynamic lors de la construction de l'exécutable, pour
+## assurer la "retro-édition de liens".
+##
+## NOTE : --export-dynamic est supposé être synonyme de -rdynamic, mais sur mon
+## Linux (Mandrake Linux 10.1), cela ne fonctionne pas (à l'exécution).
+
+#---------------------------------------------------------------------------------
+# Dependances individuelles (obtenues par 'gcc -MM *.c')
+#---------------------------------------------------------------------------------
+
+## A FAIRE : Vérifiez que ces dépendances sont correctes dans votre cas.
+
+main_Cache.o: main_Cache.c cache.h strategy.h random.h
+main_Cache-loadable.o: main_Cache-loadable.c cache.h strategy.h random.h
+load_strategy.o: load_strategy.c strategy.h load_strategy.h
+
+NUR_strategy.o: NUR_strategy.c strategy.h low_cache.h cache.h
+RAND_strategy.o: RAND_strategy.c strategy.h low_cache.h cache.h random.h
+FIFO_strategy.o: FIFO_strategy.c strategy.h low_cache.h cache.h cache_list.h
+LRU_strategy.o: LRU_strategy.c strategy.h low_cache.h cache.h cache_list.h
+
+#---------------------------------------------------------------------------------
+# Tests (de non régression) par rapport au projet Cache 
+#---------------------------------------------------------------------------------
+
+# NOTE : Ce test suppose que vous ayez construit l'ensemble des exécutables et
+# des bibliothèques demandés.
+
+tests : all
+	@echo "*** Début des tests "
+	@echo "*** Il ne doit y avoir aucun autre message jusqu'à la fin des tests" 
+	@for strat in RAND FIFO NUR LRU ; do \
+		tst_Cache_$$strat-static.exe | \
+					diff - $(CACHE_DIR)/$${strat}_default.out ; \
+		tst_Cache_$$strat-dynamic.exe | \
+					diff - $(CACHE_DIR)/$${strat}_default.out ; \
+		tst_Cache-loadable.exe $$strat  | \
+					diff - $(CACHE_DIR)/$${strat}_default.out ; \
+	done
+	@echo "*** Fin des tests"
+

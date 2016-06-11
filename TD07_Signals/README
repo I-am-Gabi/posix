@@ -1,0 +1,50 @@
+POSIX.1 : Manipulations de signaux
+==================================
+
+La Makefile permet de construire les produits suivants :
+
+make (ou make all)
+	Construit les exécutables demandés, à savoir
+
+        tst_signal.exe, tst_sigaction.exe   
+		capture des signaux avec signal() et sigaction()  (§7.2.1)
+
+        tst_ignore.exe 
+		différences entre ignorer, bloquer, et piéger sans rien faire (§7.2.2)
+
+        tst_children.exe
+        	transmission de signaux entre frères(§7.2.3)
+
+        tst_exec_signal.exe, tst_exec_signal-aux.exe
+		transmission de l'état des signaux par execXX() (§7.2.4) 
+
+        shell-system.exe
+                Simulation de la boucle du shell avec une version améliorée de la 
+                fonction system() qui réagit correcteme sur SIGINT ($7.3 à
+                partir de §5.5)  
+
+make clean
+	Détruit tous les fichiers intermédiaires mais garde les exécutables et
+        les tests.
+
+make clobber
+     	Nettoyage total : permet de repartir à zéro.
+
+NOTE
+----
+
+S'il existe une solution rapide et simple à l'exercice §7.3 (shell-system.exe),
+elle n'est pas totalement statisfaisante, car elle produit une
+désynchronisation entre l'affichage du prompt, la lecture et l'exécution des
+commandes. La solution présentée ici n'a pas cette inconvénient, mais elle est
+complexe. 
+
+Afin de comprendre le problème, le fichier PowerPoint exo_7.3.ppt
+propose une animation du scénario de désynchronisation. Cette animation existe
+aussi sous le format Open Office (exo_7.3.sxi), il faut juste cliquer un peu
+plus souvent...
+
+Jean-Paul Rigault
+Mars 2005
+$Id: README,v 1.2 2005/04/12 16:30:28 jpr Exp $
+

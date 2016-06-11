@@ -1,0 +1,33 @@
+POSIX.1 :Pipes et redirections
+==============================
+
+La Makefile permet de construire les produits suivants :
+
+make (ou make all)
+	Construit les exécutables demandés, à savoir
+
+        tst_redirect.exe   
+		Redirections simples du shell (§6.2.1)
+
+        tst_pipes.exe 
+		Redirections sur des pipes (§6.2.2)
+
+        ring.exe
+                Mise en place du réseau en anneau (§6.3.1) 
+
+        station.exe
+                La station élémentaire du réseau en anneau, réalisant le
+                protocole à jeton (§6.3.3)        
+
+make clean
+	Détruit tous les fichiers intermédiaires mais garde les exécutables et
+        les tests.
+
+make clobber
+     	Nettoyage total : permet de repartir à zéro.
+
+
+Jean-Paul Rigault
+Mars 2005
+$Id: README,v 1.1 2005/04/14 14:00:59 jpr Exp $
+

@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/cc   -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/exec_prop-aux.exe.dir/exec_prop-aux.c.o  -o exec_prop-aux.exe  

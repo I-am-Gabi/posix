@@ -1,0 +1,1 @@
+/Users/gabriela/Documents/developer/posix/TD06_Pipes_Redirections/CMakeFiles/TD06_Pipes_Redirections.dir

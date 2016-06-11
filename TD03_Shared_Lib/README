@@ -1,0 +1,18 @@
+Étude des bibliothèques binaires
+================================
+
+Utilisation de la Makefile principale (Makefile) :
+
+    make          reconstruit toutes les bibliothèques et tous les exécutables
+
+    make tests    effectue tous les tests
+
+    make clean    détruit tous les fichiers intermédiaires, mais ni les
+                  bibliothèques, ni les exécutables
+
+    make clobber  détruit tous les fichiers générés, pour repartir à 0
+
+Pour le résultat des tests, voir les commentaires dans la Makefile.
+
+Jean-Paul Rigault
+$Id: README,v 1.2 2008/04/14 15:15:49 jpr Exp $

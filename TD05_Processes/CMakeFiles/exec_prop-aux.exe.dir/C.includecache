@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/gabriela/Documents/developer/posix/TD05_Processes/exec_prop-aux.c
+unistd.h
+-
+stdlib.h
+-
+stdio.h
+-
+

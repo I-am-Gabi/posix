@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/gabriela/Documents/developer/posix/TD06_Pipes_Redirections/tst_redirect.c
+unistd.h
+-
+stdio.h
+-
+stdlib.h
+-
+fcntl.h
+-
+sys/stat.h
+-
+sys/types.h
+-
+

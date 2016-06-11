@@ -1,0 +1,78 @@
+/*!
+
+\mainpage Étude des stratégies de gestion de cache
+
+\author Jean-Paul Rigault
+
+$Id: overview.dox,v 1.3 2008/11/21 08:16:29 jpr Exp $
+
+*/
+
+\section overview Objectif
+
+Cet exercice vise à explorer différentes stratégies de remplacement de bloc de
+cache. Pour cela on construit un simulateur simple permettant de "cacher" le
+contenu d'un fichier et pouvant être réalisés avec différentes stratégies de
+remplacement dans le cache.
+
+Les stratégies de remplacement supportées sont au nombre de quatre :
+
+<dl>
+<dt>RAND (<em>Random</em>)</dt>          
+    <dd>le bloc à remplacer est tiré au hasard</dd>
+
+<dt>FIFO (<em>First In First Out</em>)</dt>    
+    <dd>le bloc à remplacer est le plus vieux du cache</dd>
+
+<dt>LRU (<em>Least Recently Used</em>)</dt>    
+    <dd>le bloc à remplacer est celui qui n'a pas été accédé (lu ou modifié) 
+    depuis le temps le plus long</dd> 
+
+<dt>NUR (<em>Not Used Recently</em>)</dt>   
+    <dd>le bloc à remplacer est celui qui n'a pas été accédé
+    dans le passé proche, en privilégiant les blocs non modifiés</dd>
+</dl>
+
+\section org Organisation du code
+
+Le code est organisé suivant une architecture modulaire en quatre couches
+qui sépare 
+
+<ul>
+    <li>l'application utilisant le cache (dans notre cas, il s'agit de 
+    programmes de test)</li>
+
+    <li>la partie de gestion du cache indépendante de la stratégie de remplacement</li>
+
+    <li>les détails de réalisation du cache et le choix de la stratégie de remplacement</li>
+
+    <li>les utilitaires de bas niveau (ici juste une gestion de liste simple)</li>
+</ul>
+
+Les différentes couches sont séparées par des interfaces proprement
+spécifiées. La <a href="../html_extra/organisation_code.html">figure suivante</a>
+illustre cette organisation et indique les fichiers qui la constituent.
+
+\section make Utilisation de la Makefile
+
+Les points d'entrée principaux sont les suivants :
+
+<dl>
+<dt><tt>make</tt></dt>          
+    <dd>reconstruit tous les exécutables</dd>
+
+<dt><tt>make simul</tt></dt>    
+    <dd>exécute toutes les stratégies et met les résultats correspondants 
+    dans les fichiers \c .out</dd>
+
+<dt><tt>make plots</tt></dt>    
+    <dd>crée les graphiques dans le répertoire Plots</dd>
+
+<dt><tt>make clean</tt></dt>   
+    <dd>détruit tous les fichiers intermédiaires, mais pas les exécutables</dd>
+
+<dt><tt>make clobber</tt></dt>  
+    <dd>détruit tous les fichiers générés, pour repartir à zéro</dd>
+</dl>
+
+Pour l'analyse des résultats, voir le rapport TD02_Rapport_Syst_ESSI_1.pdf. 

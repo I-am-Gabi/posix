@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/gabriela/Downloads/CP_Cavalcante/include/cp.h
+
+/Users/gabriela/Downloads/CP_Cavalcante/main_parser.c
+string.h
+-
+stdio.h
+-
+getopt.h
+-
+include/cp.h
+/Users/gabriela/Downloads/CP_Cavalcante/include/cp.h
+
+/Users/gabriela/Downloads/CP_Cavalcante/source/cp.c
+unistd.h
+-
+stdio.h
+-
+fcntl.h
+-
+ecpglib.h
+-
+sys/stat.h
+-
+dirent.h
+-
+stdlib.h
+-
+../include/cp.h
+/Users/gabriela/Downloads/CP_Cavalcante/include/cp.h
+
